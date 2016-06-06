@@ -1,5 +1,7 @@
 import weakref
 
+nodes = {}
+
 class Tree(object):
 
     def __init__(self, item, parent=None):
@@ -18,18 +20,10 @@ class Tree(object):
         if self._parent:
             return self._parent()
 
-    def traversal(self):
-        l = [self]
-        for child in self.children:
-            l += child.traversal()
-        return l
-
 def add_to_tree(tree, s1, e1, T):
     count = 0
-    for node in tree.traversal():
-        if node.item == s1:
-            child = node.add_child(e1)
-            break
+    child = nodes[s1].add_child(e1)
+    nodes[e1] = child
     aux = child
     while aux.parent is not None:
         if abs(aux.parent.item - child.item) <= T:
@@ -50,6 +44,7 @@ if __name__ == "__main__":
     count = 0
     s1, e1 = parse_input(raw_input())
     tree = Tree(s1)
+    nodes[s1] = tree
     count += add_to_tree(tree, s1, e1, T)
     for i in range(n - 1):
         s1, e1 = parse_input(raw_input()) 
